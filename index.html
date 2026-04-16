@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engora — Think systems. Build real software.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:          #0b0b0b;
+      --bg-2:        #111111;
+      --bg-3:        #161616;
+      --border:      rgba(255,255,255,0.07);
+      --border-hover:rgba(255,255,255,0.14);
+      --text-1:      #f0f0f0;
+      --text-2:      #888;
+      --text-3:      #555;
+      --accent:      #6c8dfa;
+      --accent-dim:  rgba(108,141,250,0.12);
+      --accent-glow: rgba(108,141,250,0.25);
+      --mono:        'DM Mono', monospace;
+      --sans:        'Syne', sans-serif;
+      --max:         1120px;
+      --radius:      10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── CONTAINER ── */
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+      50%       { box-shadow: 0 0 0 6px transparent; }
+    }
+
+    .fade-up { animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) both; }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.15s; }
+    .d3 { animation-delay: 0.25s; }
+    .d4 { animation-delay: 0.38s; }
+    .d5 { animation-delay: 0.50s; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,11,11,0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+    }
+    .logo {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-1);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+    nav { display: flex; align-items: center; gap: 8px; }
+    nav a {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text-2);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    nav a:hover { color: var(--text-1); background: rgba(255,255,255,0.05); }
+    .nav-cta {
+      background: var(--accent-dim) !important;
+      color: var(--accent) !important;
+      border: 1px solid rgba(108,141,250,0.25);
+    }
+    .nav-cta:hover { background: rgba(108,141,250,0.2) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      padding: 130px 0 110px;
+      text-align: center;
+      overflow: hidden;
+    }
+    /* radial glow behind hero */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(108,141,250,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(108,141,250,0.2);
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 30px;
+    }
+    .hero h1 {
+      font-size: clamp(3.2rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--text-1);
+      margin-bottom: 18px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #6c8dfa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 2.2vw, 1.22rem);
+      color: var(--text-2);
+      max-width: 480px;
+      margin: 0 auto 46px;
+      line-height: 1.65;
+      font-family: var(--mono);
+      font-weight: 300;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 12px 26px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: all 0.22s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 0 0 var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: #7fa0ff;
+      box-shadow: 0 8px 28px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-2);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--border-hover);
+      color: var(--text-1);
+      transform: translateY(-1px);
+    }
+    .btn svg { flex-shrink: 0; }
+
+    /* hero terminal decoration */
+    .hero-terminal {
+      margin: 68px auto 0;
+      max-width: 560px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: left;
+    }
+    .terminal-bar {
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .terminal-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .terminal-dot:nth-child(1) { background: #ff5f57; }
+    .terminal-dot:nth-child(2) { background: #ffbd2e; }
+    .terminal-dot:nth-child(3) { background: #28c840; }
+    .terminal-body {
+      padding: 22px 24px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.9;
+      color: var(--text-3);
+    }
+    .terminal-body .prompt { color: var(--accent); }
+    .terminal-body .cmd     { color: var(--text-1); }
+    .terminal-body .out     { color: var(--text-2); }
+    .terminal-body .ok      { color: #5cffa3; }
+    .terminal-body .err     { color: #ff6b6b; }
+
+    /* ── SECTION COMMON ── */
+    section { position: relative; z-index: 1; }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      margin-bottom: 18px;
+    }
+    .section-sub {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      color: var(--text-2);
+      line-height: 1.7;
+      max-width: 540px;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── PROBLEM ── */
+    .problem { padding: 110px 0; border-top: 1px solid var(--border); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      margin-top: 64px;
+    }
+    .problem-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 28px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.2s;
+    }
+    .problem-item:hover { border-color: var(--border-hover); }
+    .problem-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-3);
+      letter-spacing: 0.1em;
+    }
+    .problem-item h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .problem-item p {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--text-2);
+      line-height: 1.65;
+    }
+    .problem-left { grid-column: 1 / -1; max-width: 600px; }
+
+    /* ── SOLUTION ── */
+    .solution { padding: 110px 0; border-top: 1px solid var(--border); background: var(--bg-2); }
+    .solution-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .solution-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .sol-step {
+      display: flex;
+      gap: 20px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .sol-step:last-child { border-bottom: none; }
+    .sol-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(108,141,250,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+    .sol-step h4 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      letter-spacing: -0.01em;
+    }
+    .sol-step p {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how { padding: 110px 0; border-top: 1px solid var(--border); }
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 64px;
+    }
+    .step-card {
+      background: var(--bg);
+      padding: 30px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: background 0.2s;
+    }
+    .step-card:hover { background: var(--bg-2); }
+    .step-n {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    .step-card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .step-card p {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    /* ── TRACKS ── */
+    .tracks { padding: 110px 0; border-top: 1px solid var(--border); background: var(--bg-2); }
+    .tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 64px;
+    }
+    .track-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .track-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .track-card:nth-child(1) .track-badge { background: rgba(94,234,212,0.1); color: #5eead4; border-color: rgba(94,234,212,0.2); }
+    .track-card:nth-child(2) .track-badge { background: rgba(251,191,36,0.1);  color: #fbbf24; border-color: rgba(251,191,36,0.2); }
+    .track-card:nth-child(3) .track-badge { background: rgba(167,139,250,0.1); color: #a78bfa; border-color: rgba(167,139,250,0.2); }
+    .track-card:nth-child(4) .track-badge { background: rgba(251,113,133,0.1); color: #fb7185; border-color: rgba(251,113,133,0.2); }
+    .track-card:nth-child(5) .track-badge { background: rgba(108,141,250,0.1); color: #6c8dfa; border-color: rgba(108,141,250,0.2); }
+    .track-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      border: 1px solid;
+      width: fit-content;
+    }
+    .track-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .track-card p {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+    /* 5th card spans 2 cols on last row if needed — handled via grid */
+    .tracks-grid .track-card:nth-child(5) {
+      grid-column: span 1;
+    }
+    /* make 5 cards look balanced: 3 + 2 */
+    @media (min-width: 769px) {
+      .tracks-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .tracks-grid .track-card:nth-child(4),
+      .tracks-grid .track-card:nth-child(5) {
+        /* center the last two */
+      }
+      /* 4th and 5th in a 3-col grid: naturally placed */
+    }
+
+    /* ── FINAL CTA ── */
+    .cta-section {
+      padding: 140px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(108,141,250,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 {
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .cta-section h2 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .cta-section p {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      color: var(--text-2);
+      margin-bottom: 44px;
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-3);
+    }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text-2); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .problem-grid { grid-template-columns: 1fr; gap: 16px; }
+      .problem-left { max-width: 100%; }
+      .solution-inner { grid-template-columns: 1fr; gap: 48px; }
+      .steps-row { grid-template-columns: 1fr 1fr; }
+      .tracks-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .hero { padding: 90px 0 70px; }
+      .steps-row { grid-template-columns: 1fr; }
+      .tracks-grid { grid-template-columns: 1fr; }
+      nav .nav-hide { display: none; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="wrap header-inner">
+      <a class="logo" href="#">engora<span>.</span></a>
+      <nav>
+        <a href="#tracks" class="nav-hide">Tracks</a>
+        <a href="#how" class="nav-hide">How it works</a>
+        <a href="#cta" class="nav-cta btn">Join →</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-eyebrow fade-up d1">system-thinking platform for engineers</div>
+      <h1 class="fade-up d2">Think systems.<br><em>Build real software.</em></h1>
+      <p class="hero-tagline fade-up d3">
+        Most developers can write code.<br>Engora teaches you to understand and build the systems behind it.
+      </p>
+      <div class="hero-actions fade-up d4">
+        <a href="#cta" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Start Learning
+        </a>
+        <a href="https://github.com" target="_blank" class="btn btn-ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          View on GitHub
+        </a>
+      </div>
+
+      <div class="hero-terminal fade-up d5">
+        <div class="terminal-bar">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+        </div>
+        <div class="terminal-body">
+          <div><span class="prompt">$</span> <span class="cmd">engora start auth-system</span></div>
+          <div><span class="out">→ Loading: JWT, sessions, OAuth concepts...</span></div>
+          <div><span class="out">→ Breaking into: tokens, storage, refresh flow</span></div>
+          <div><span class="out">→ Challenge: build a stateless auth layer</span></div>
+          <div><span class="ok">✓ System understood. Now build it.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROBLEM ── -->
+  <section class="problem" id="problem">
+    <div class="wrap">
+      <p class="section-label">the problem</p>
+      <div class="problem-grid">
+        <div class="problem-left">
+          <h2 class="section-title">You can write code.<br>You don't understand systems.</h2>
+          <p class="section-sub">Tutorials teach you syntax. They don't teach you how auth actually works, why payments fail, or how to design a system that holds up under load. That gap is why developers get stuck in the same place for years.</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">01</span>
+          <h3>Tutorials get you started. They don't get you far.</h3>
+          <p>You build the todo app. You follow along. But when it's time to ship something real, nothing translates.</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">02</span>
+          <h3>You build apps but don't understand what's inside them.</h3>
+          <p>JWT, OAuth, idempotency, message queues — you've heard the words. You've never had to reason about them from scratch.</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">03</span>
+          <h3>Real-world problems need system thinking, not syntax.</h3>
+          <p>Senior engineers don't just write code. They model systems, identify failure modes, and build for constraints that don't exist in tutorials.</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">04</span>
+          <h3>No one is teaching the layer between "it works" and "production".</h3>
+          <p>There's a huge gap between a working demo and a system that handles scale, errors, and real users. Engora fills that gap.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOLUTION ── -->
+  <section class="solution" id="solution">
+    <div class="wrap">
+      <div class="solution-inner">
+        <div>
+          <p class="section-label">the approach</p>
+          <h2 class="section-title">Learn systems by building them from the ground up.</h2>
+          <p class="section-sub">Engora doesn't hand you code. It walks you through how real systems are designed — then asks you to build one. Every concept is broken down, reasoned through, and applied to a real problem.</p>
+        </div>
+        <div class="solution-steps">
+          <div class="sol-step">
+            <div class="sol-icon">01</div>
+            <div>
+              <h4>Learn how the system actually works</h4>
+              <p>Start with first principles. No hand-waving. Understand the why before the how.</p>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="sol-icon">02</div>
+            <div>
+              <h4>Break it into simple, reasoned concepts</h4>
+              <p>Complex systems are just simple rules stacked on each other. We decompose them clearly.</p>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="sol-icon">03</div>
+            <div>
+              <h4>Build a simplified but honest version</h4>
+              <p>Not a toy. A real, working system that handles the real constraints of the domain.</p>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="sol-icon">04</div>
+            <div>
+              <h4>Solve real-world engineering challenges</h4>
+              <p>Edge cases. Failures. Trade-offs. The problems that only appear in production.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <p class="section-label">how it works</p>
+      <h2 class="section-title">Five stages. No shortcuts.</h2>
+      <div class="steps-row">
+        <div class="step-card">
+          <span class="step-n">Step 01</span>
+          <h3>Learn the system</h3>
+          <p>Understand the full picture before writing a line of code. What does it do? Why does it exist?</p>
+        </div>
+        <div class="step-card">
+          <span class="step-n">Step 02</span>
+          <h3>Understand the concepts</h3>
+          <p>Break down the internals. Tokens, queues, idempotency, state — defined clearly, no jargon.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-n">Step 03</span>
+          <h3>Build it</h3>
+          <p>Build a working implementation. Not a tutorial clone. Something you designed yourself.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-n">Step 04</span>
+          <h3>Solve real challenges</h3>
+          <p>Token expiry. Race conditions. Payment retries. The problems engineers actually face.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-n">Step 05</span>
+          <h3>Get feedback</h3>
+          <p>Structured review on your design decisions, trade-offs, and implementation choices.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRACKS ── -->
+  <section class="tracks" id="tracks">
+    <div class="wrap">
+      <p class="section-label">tracks</p>
+      <h2 class="section-title">Pick a system. Understand it completely.</h2>
+      <div class="tracks-grid">
+        <div class="track-card">
+          <span class="track-badge">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><rect width="10" height="10" rx="2"/></svg>
+            Foundations
+          </span>
+          <h3>Foundations</h3>
+          <p>HTTP, TCP, databases, caching, queues — the building blocks every system rests on.</p>
+        </div>
+        <div class="track-card">
+          <span class="track-badge">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><rect width="10" height="10" rx="2"/></svg>
+            Authentication
+          </span>
+          <h3>Authentication</h3>
+          <p>Sessions, JWT, OAuth, SSO — build an auth system that's secure and production-ready.</p>
+        </div>
+        <div class="track-card">
+          <span class="track-badge">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><rect width="10" height="10" rx="2"/></svg>
+            Payments
+          </span>
+          <h3>Payments</h3>
+          <p>Idempotency, webhooks, retries, failures — payments done right are an engineering problem.</p>
+        </div>
+        <div class="track-card">
+          <span class="track-badge">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><rect width="10" height="10" rx="2"/></svg>
+            Messaging
+          </span>
+          <h3>Messaging</h3>
+          <p>Queues, pub/sub, fan-out — understand how systems talk to each other asynchronously.</p>
+        </div>
+        <div class="track-card">
+          <span class="track-badge">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><rect width="10" height="10" rx="2"/></svg>
+            System Design
+          </span>
+          <h3>System Design</h3>
+          <p>Trade-offs, bottlenecks, scalability — think like a principal engineer, not a code monkey.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FINAL CTA ── -->
+  <section class="cta-section" id="cta">
+    <div class="wrap">
+      <h2>Stop copying code.<br><em>Start building systems.</em></h2>
+      <p>Join engineers who are done following tutorials<br>and ready to build things that actually work.</p>
+      <a href="#" class="btn btn-primary" style="margin: 0 auto; font-size: 0.9rem; padding: 14px 34px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Join Engora
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="wrap footer-inner">
+      <span class="footer-copy">© 2025 Engora. Built for engineers.</span>
+      <div class="footer-links">
+        <a href="#">GitHub</a>
+        <a href="#">Twitter</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
