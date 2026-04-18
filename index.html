@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Engora — Think systems. Build real software.</title>
+  <meta name="description" content="Engora is a system-thinking platform for engineers. Learn how real systems work, break them into concepts, and build them. A product by Engora Labs." />
+  <meta name="author" content="Engora Labs" />
+  <meta property="og:title" content="Engora — Think systems. Build real software." />
+  <meta property="og:description" content="A system-thinking platform for engineers, built by Engora Labs." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Engora — Think systems. Build real software." />
+  <meta name="twitter:description" content="A system-thinking platform for engineers, built by Engora Labs." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -120,6 +128,23 @@
       border: 1px solid rgba(108,141,250,0.25);
     }
     .nav-cta:hover { background: rgba(108,141,250,0.2) !important; }
+
+    .hero-built-by {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-3);
+      opacity: 0.7;
+      margin-bottom: 28px;
+      letter-spacing: 0.04em;
+    }
+    .hero-built-by a {
+      color: var(--text-3);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .hero-built-by a:hover { color: var(--text-2); border-color: var(--text-3); }
 
     /* ── HERO ── */
     .hero {
@@ -581,6 +606,7 @@
     <div class="wrap">
       <div class="hero-eyebrow fade-up d1">system-thinking platform for engineers</div>
       <h1 class="fade-up d2">Think systems.<br><em>Build real software.</em></h1>
+      <p class="hero-built-by fade-up d3">Built by <a href="https://github.com" target="_blank">Engora Labs</a></p>
       <p class="hero-tagline fade-up d3">
         Most developers can write code.<br>Engora teaches you to understand and build the systems behind it.
       </p>
@@ -595,7 +621,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
           </svg>
-          View on GitHub
+          View on GitHub (Engora Labs)
         </a>
       </div>
 
@@ -794,7 +820,7 @@
   <!-- ── FOOTER ── -->
   <footer>
     <div class="wrap footer-inner">
-      <span class="footer-copy">© 2025 Engora. Built for engineers.</span>
+      <span class="footer-copy">© 2026 Engora Labs &nbsp;·&nbsp; Engora is a product of Engora Labs.</span>
       <div class="footer-links">
         <a href="#">GitHub</a>
         <a href="#">Twitter</a>
